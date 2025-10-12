@@ -2,64 +2,40 @@
 {
     "layer": "top", // Waybar at top layer
     "position": "top", // Waybar position (top|bottom|left|right)
-    "height": 30, // Waybar height (to be removed for auto height)
+    "height": "30px", // Waybar height (to be removed for auto height)
     // "width": 1280, // Waybar width
-    "spacing": 4, // Gaps between modules (4px)
+    "spacing": "4px", // Gaps between modules (4px)
+    
     // Choose the order of the modules
     "modules-left": [
-        //"hyprland/window",
         "custom/notification",
         "clock",
-        "custom/pacman",
-        "tray"
+        "tray",
+        "group/expand"
     ],
     "modules-center": [
 	"hyprland/workspaces",
     ],
     "modules-right": [
-        //"mpd",
-        //"idle_inhibitor",
-        "group/expand",
+        "custom/media",
         "pulseaudio",
         "custom/mixer",
-        "network",
-        //"power-profiles-daemon",
-        //"cpu",
-        //"memory",
-        //"temperature",
-        //"backlight",
-        //"keyboard-state",
-        //"sway/language",
-        //"battery",
-        //"battery#bat2",
-	//"clock",
-	"bluetooth"
-        //"tray",
-        //"custom/power",
-	//"custom/notifications"
+        "custom/power"
     ],
-    // Modules configuration
     
-     "hyprland/workspaces": {
-	 "disable-scroll": false,
-         "all-outputs": true,
-         "warp-on-scroll": true,
-         //"format": "{name}: {icon}",
-         "format": "{icon}",
-         "format-icons": {
-    //         "1": "",
-    //         "2": "",
-    //         "3": "",
-    //         "4": "",
-    //         "5": "",
-    //         "urgent": "",
-    //         "active": "",
-    //         "default": ""
-             "active": "",
-             "default": "",
-             "empty":""
-         }
-     },
+    // Modules configuration
+    "hyprland/workspaces": {
+        "disable-scroll": false,
+        "all-outputs": true,
+        "warp-on-scroll": true,
+        //"format": "{name}: {icon}",
+        "format": "{icon}",
+        "format-icons": {
+            "active": "",
+            "default": "",
+            "empty":""
+        }
+    },
 
     "custom/notification": {
         "tooltip": false,
@@ -85,26 +61,6 @@
         }
     },
 
-    "custom/pacman": {
-        "format": "󰅢 {}",
-        "interval": 30,   
-        "exec": "checkupdates | wc -l",
-        "exec-if": "exit 0",
-        "on-click": "kitty sh -c 'paru -Syu; echo Done - Press enter to exit; read'; pkill -SIGRTMIN+8 waybar",
-        "signal": 8,
-        "tooltip": false,
-    },
-
-    //"keyboard-state": {
-    //    "numlock": true,
-    //    "capslock": true,
-    //    "format": "{name} {icon}",
-    //    "format-icons": {
-    //        "locked": "",
-    //        "unlocked": ""
-    //    }
-    //},
-
     "tray": {
         // "icon-size": 21,
 	"icon-size": 18,
@@ -122,16 +78,19 @@
             "transition-to-left": true,
             "click-to-reveal": true
         },
-        "modules": ["custom/expand", "cpu","memory","temperature","custom/endpoint"],
+        "modules": [
+            "custom/expand",
+            "cpu",
+            "memory",
+            "temperature",
+            "backlight",
+            "battery",
+            "power-profiles-daemon"
+        ]
     },
 
     "custom/expand": {
-        "format": "",
-        "tooltip": false
-    },
-
-    "custom/endpoint":{
-        "format": "|",
+        "format": "",
         "tooltip": false
     },
     
@@ -170,9 +129,7 @@
         // "format-full": "",
         "format-icons": ["", "", "", "", ""]
     },
-    "battery#bat2": {
-        "bat": "BAT2"
-    },
+
     "power-profiles-daemon": {
       "format": "{icon}",
       "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
@@ -184,15 +141,7 @@
         "power-saver": ""
       }
     },
-    "network": {
-        // "interface": "wlp2*", // (Optional) To force the use of this interface
-        "format-wifi": "{essid} ({signalStrength}%) ",
-        "format-ethernet": "{ipaddr}/{cidr} ",
-        "tooltip-format": "{ifname} via {gwaddr} ",
-        "format-linked": "{ifname} (No IP) ",
-        "format-disconnected": "Disconnected ⚠",
-        "format-alt": "{ifname}: {ipaddr}/{cidr}"
-    },
+
     "pulseaudio": {
         // "scroll-step": 1, // %, can be a float
         "format": "{volume}% {icon} {format_source}",
@@ -247,7 +196,7 @@
         // "exec": "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" // Filter player based on name
     },
     "custom/power": {
-        "format" : "⏻ ",
+        "format" : "",
 		"tooltip": false,
 		"menu": "on-click",
 		"menu-file": "$HOME/.config/waybar/power_menu.xml", // Menu file in resources folder
