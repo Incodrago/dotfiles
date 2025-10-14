@@ -15,7 +15,7 @@ Specifically the files "walset" and "walset-backend".
 walset and walset-backend are meant to be used as commands in the terminal and are executed as such by hyprland when setting a wallpaper. So you will need to add them to your PATH environment variable.
 To do this, add `export PATH=$PATH:/home/<your_username>/.local/bin` at the end of your .bashrc file (or .zshrc or whichever shell you use)
 
-just to let you know changing wallpapers creates a file: ~/.cache/last_wallpaper.txt
+just to let you know changing wallpapers creates a file: `~/.cache/last_wallpaper.txt`
 it's so that swww can read which wallpaper was picked last at boot and show that. Also for hyprlock (so it knows which image to show)
 
 main shortcuts are:
@@ -36,6 +36,7 @@ main shortcuts are:
 - mainMod + Shift + Numbers_from_number_row to move active window to selected workspace
 
 no installation scripts sorry i'm sure you will need to change the hyprland config too since it's set for my monitors
+
 work in progress
 
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/e29f1fe9-0a81-42e1-ba27-22eba8cc7fd7" />
