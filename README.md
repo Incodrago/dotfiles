@@ -1,4 +1,5 @@
 My dotfiles, mainly there so I can reproduce it later
+
 nothing complicated, I use arch with hyprland with:
 - kitty (terminal emulator)
 - waybar (status bar)
@@ -9,14 +10,16 @@ nothing complicated, I use arch with hyprland with:
 
 You will need to give execution permissions to the files in ~/.local/bin
 Specifically the files "walset" and "walset-backend".
+
 `chmod +x ~/.local/bin/walset`
+
 `chmod +x ~/.local/bin/walset-backend`
 
 walset and walset-backend are meant to be used as commands in the terminal and are executed as such by hyprland when setting a wallpaper. So you will need to add them to your PATH environment variable.
 To do this, add `export PATH=$PATH:/home/<your_username>/.local/bin` at the end of your .bashrc file (or .zshrc or whichever shell you use)
 
 just to let you know changing wallpapers creates a file: `~/.cache/last_wallpaper.txt`
-it's so that swww can read which wallpaper was picked last at boot and show that. Also for hyprlock (so it knows which image to show)
+it's so that swww can read which wallpaper was picked last at boot and show that.
 
 main shortcuts are:
 - mainMod + Q to open a terminal
