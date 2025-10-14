@@ -1,0 +1,64 @@
+#!/bin/bash
+
+# Path to store the last wallpaper path to
+LAST_WALLPAPER_FILE="$HOME/.cache/last_wallpaper.txt"
+
+# Path to load the pywal colors from
+WAL_JSON="$HOME/.cache/wal/colors.json"
+
+# Path for apps that will need to get the new colors we generate
+SWAYNC_COLORS="$HOME/.config/swaync/colors.css"
+GTK_COLORS="$HOME/.config/gtk-3.0/colors.css"
+
+# Check if the user provided an argument
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <path_to_image>"
+    exit 1
+fi
+
+IMAGE="$1"
+
+# Send notification to the user
+notify-send "Changing Theme" "Applying new wallpaper and updating colors, please wait until confirmation..."
+
+# Set wallpaper
+swww img "$IMAGE" --transition-type="grow" --transition-duration="1" --transition-fps="60"
+
+# Generate pywal colors
+wal -i "$IMAGE" -n -t -e
+
+# Generate GTK and swaync colors
+BG=$(jq -r '.colors.color0' "$WAL_JSON")
+FG=$(jq -r '.special.foreground' "$WAL_JSON")
+ACCENT=$(jq -r '.colors.color2' "$WAL_JSON")
+BORDER=$(jq -r '.colors.color1' "$WAL_JSON")
+URGENT=$(jq -r '.colors.color3' "$WAL_JSON")
+
+# GTK colors
+cat > "$GTK_COLORS" <<EOF
+@define-color wal_bg_color $BG;
+@define-color wal_fg_color $FG;
+@define-color wal_accent_color $ACCENT;
+EOF
+
+# swaync colors
+cat > "$SWAYNC_COLORS" <<EOF
+@define-color background $BG;
+@define-color foreground $FG;
+@define-color accent $ACCENT;
+@define-color border $BORDER;
+@define-color urgent $URGENT;
+EOF
+
+# Refresh waybar
+pkill waybar
+waybar > /dev/null 2>&1 &
+
+# Refresh swaync
+pkill swaync
+swaync > /dev/null 2>&1 &
+
+# Save wallpaper path so swww can find it on boot
+echo " ~/.config/wallpapers/$IMAGE" > "$LAST_WALLPAPER_FILE"
+
+notify-send "Theme Applied" "Wallpaper and theme updated successfully!"
