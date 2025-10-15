@@ -7,6 +7,8 @@ nothing complicated, I use arch with hyprland with:
 - swaync (notification center)
 - pywal (grab colors from wallpapers to apply them to styles)
 - swww (for setting the wallpaper. hyprpaper would've worked too but no wallpaper change animation)
+- hyprlock (screen lock)
+- hypridle (to trigger hyprlock)
 
 You will need to give execution permissions to the files in ~/.local/bin
 Specifically the files "walset" and "walset-backend".
