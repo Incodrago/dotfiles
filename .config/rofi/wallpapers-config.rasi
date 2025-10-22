@@ -1,0 +1,56 @@
+@import "/home/Thibaud/.config/rofi/config.rasi"
+
+configuration {
+    show-icons: true;
+    font: "JetBrainsMono Nerd Font 10";
+    drun-display-format: "{icon} {name}";
+}
+
+window {
+    fullscreen: false;
+    transparency:                "real";
+    width:                       45%;
+    border-color:                transparent;
+    transparency:                "real";
+    background-color:            @bg-alt;
+}
+
+mainbox {
+    orientation:                 horizontal;
+    children:                    [ "dummy", "frame", "dummy" ];
+    background-color:           transparent;
+}
+frame {
+    children:                    ["inputbar", "listview" ];
+    background-color:            transparent;
+}
+
+inputbar {
+    enabled: false;
+}
+
+listview {
+    spacing: 10;
+    element-icon: true;
+    icon-padding: 5;
+    icon-size: 120;  /* size of wallpaper thumbnails */
+    text-padding: 5;
+    text-alignment: center;  /* show filename centered under thumbnail */
+}
+
+element selected {
+    background: @bg-alt;
+    text-color: @fg-alt;
+    padding: 5;
+}
+
+element {
+    background: @bg;
+    text-color: @fg;
+    padding: 5;
+}
+
+window {
+    background: @bg;
+    padding: 10;
+}
