@@ -1,3 +1,5 @@
+@import "wallpaper_path.rasi"
+
 configuration {
     display-drun: "Applications";
     display-window: "Windows";
@@ -13,11 +15,8 @@ configuration {
 * {
     bg: @background;
     bg-alt: @active-background;
-
     fg: @foreground;
     fg-alt: @active-foreground;
-
-    background-color: @bg;
 
     border: 0;
     margin: 0;
@@ -25,12 +24,67 @@ configuration {
     spacing: 0;
 }
 
+/* Make the window wide enough for two columns */
 window {
-    width: 30%;
+    width: 40%;
+    height: 50%;
+    location: center;
+    transparency: "real";
+    children: [mainbox];
+    padding: 4px;
+    border-radius: 10px;
 }
 
-element {
+/* The main horizontal layout */
+mainbox {
+    orientation: horizontal;
+    children: [imagebox, contentbox];
+}
+
+/* Left column: the image area */
+imagebox {
+    background-image: url("background.png");
+    /*background-size: cover;*/
+    background-position: center;
+    expand: false;
+    width: calc((40% - 12px) / 2); /* Because total box is 40% and we remove 10px left padding, 10px right padding, 12px margin for gap between the two boxes */
+    border-radius: 10px 0px 0px 10px;
+    margin: 0px 4px 0px 0px;
+    background-color: @bg-alt;  /* fallback color */
+}
+
+/* Right column: input bar + listview */
+contentbox {
+    background-color: @bg;
+    expand: true;
+    width: calc((40% - 32px) / 2); /* Because total box is 40% and we remove 10px left padding, 10px right padding, 12px margin for gap between the two boxes */
+    children: [inputbar, listview];
+    border-radius: 0 10px 10px 0;
+}
+
+/* Input field styling */
+entry, prompt {
+    background-color: @bg-alt;
     padding: 12;
+    text-color: @fg;
+}
+
+inputbar {
+    children: [prompt, entry];
+    spacing: 6;
+}
+
+/* List styling */
+listview {
+    background-color: @bg;
+    columns: 1;
+    lines: 8;
+    spacing: 4;
+}
+
+/* Element styling */
+element {
+    padding: 10;
     text-color: @fg-alt;
 }
 
@@ -46,20 +100,4 @@ element-text {
 
 element-icon {
     size: 30;
-}
-
-entry, prompt {
-    background-color: @bg-alt;
-    padding: 12;
-    text-color: @fg;
-}
-
-inputbar {
-    children: [prompt, entry];
-}
-
-listview {
-    background-color: @bg;
-    columns: 1;
-    lines: 8;
 }

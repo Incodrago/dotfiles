@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# Helper function
+hex_to_rgba() {
+    local hex=$1
+    local alpha=$2
+    hex=${hex#"#"}  # remove #
+    local r=$((16#${hex:0:2}))
+    local g=$((16#${hex:2:2}))
+    local b=$((16#${hex:4:2}))
+    echo "rgba($r,$g,$b,$alpha)"
+}
+
 # Path to store the last wallpaper path to
 LAST_WALLPAPER_FILE="$HOME/.cache/last_wallpaper.txt"
 
@@ -25,6 +36,23 @@ notify-send "Changing Theme" "Applying new wallpaper and updating colors, please
 # Set wallpaper
 #swww img "$IMAGE" --transition-type="grow" --transition-duration="1" --transition-fps="60"
 
+# Generate small wallpaper version for rofi (background job)
+(
+    OUTPUT="$HOME/.config/rofi/background.png"
+    SCREEN_WIDTH=$(xdpyinfo | awk '/dimensions:/ {print $2}' | cut -d'x' -f1)
+    SCREEN_HEIGHT=$(xdpyinfo | awk '/dimensions:/ {print $2}' | cut -d'x' -f2)
+    # Rofi window size (same as the CSS)
+    ROFI_WIDTH=$(( SCREEN_WIDTH * 40 / 100 ))
+    ROFI_HEIGHT=$(( SCREEN_HEIGHT * 50 / 100 ))
+    # Imagebox width = half of Rofi window (minus margins/padding)
+    IMAGEBOX_WIDTH=$(( (ROFI_WIDTH - 32) / 2 ))
+    IMAGEBOX_HEIGHT=$ROFI_HEIGHT
+    # Crop left portion of wallpaper to match imagebox size (ImageMagick)
+    # Preserves aspect ratio by resizing first to match height, then crop width
+    magick "$IMAGE" -resize x$IMAGEBOX_HEIGHT -gravity west -crop ${IMAGEBOX_WIDTH}x${IMAGEBOX_HEIGHT}+0+0 +repage "$OUTPUT"
+) &
+
+
 # Generate pywal colors
 wal -i "$IMAGE" -n -t -e
 
@@ -38,6 +66,7 @@ INFO=$(jq -r '.colors.color4' "$WAL_JSON") # info, 3rd accent
 ACCENT=$(jq -r '.colors.color5' "$WAL_JSON") # 4th accent
 ACCENT2=$(jq -r '.colors.color6' "$WAL_JSON") # 5th accent
 ACCENT3=$(jq -r '.colors.color8' "$WAL_JSON") # 6th accent
+BG_TRANSPARENT=$(hex_to_rgba "$BG" "0.8")
 
 # Generate hyprland conf with the new colors
 cat > "$HYPR_COLORS" <<EOF
@@ -56,23 +85,29 @@ cat > "$GTK_COLORS" <<EOF
 @define-color wal_accent_color $SUCCESS;
 EOF
 
-# swaync coxlors
+# swaync colors
 cat > "$SWAYNC_COLORS" <<EOF
 @define-color background $BG;
+@define-color background_transparent $BG_TRANSPARENT;
 @define-color foreground $FG;
 @define-color accent $SUCCESS;
+@define-color accent2 $ACCENT;
+@define-color accent3 $ACCENT2;
+@define-color accent4 $ACCENT3;
 @define-color border $ERROR;
 @define-color urgent $WARNING;
+@define-color info $INFO;
 EOF
 
 # Refresh waybar
+pkill -SIGUSR2 waybar
 #pkill waybar
 #waybar > /dev/null 2>&1 &
-pkill -SIGUSR2 waybar
 
 # Refresh swaync
-pkill swaync
-swaync > /dev/null 2>&1 &
+swaync-client --reload-config --reload-css
+#pkill swaync
+#swaync > /dev/null 2>&1 &
 
 # Save wallpaper path so swww can find it on boot
 echo "$HOME/.config/wallpapers/$IMAGE" > "$LAST_WALLPAPER_FILE"
@@ -82,20 +117,21 @@ HYPRLOCK_CONF="$HOME/.config/hypr/hyprlock.conf"
 sed -i "/^background {/,/^}/ s|^\s*path = .*|    path = $(<"$LAST_WALLPAPER_FILE")|" "$HYPRLOCK_CONF"
 
 # Update hyprlock input colors
-hex_to_rgba() {
-    HEX=${1#"#"}           # remove #
-    R=$((16#${HEX:0:2}))
-    G=$((16#${HEX:2:2}))
-    B=$((16#${HEX:4:2}))
-    echo "$R,$G,$B,1.0"
-}
-FG_RGBA=$(hex_to_rgba "$FG")       # for font_color
-ACCENT_RGBA=$(hex_to_rgba "$SUCCESS") # for outer_color & check_color
-FAIL_RGBA=$(hex_to_rgba "$ERROR")   # for fail_color
-sed -i "/^input-field {/,/^}/ s|^\s*font_color = .*|    font_color = rgba($FG_RGBA)|" "$HYPRLOCK_CONF"
-sed -i "/^input-field {/,/^}/ s|^\s*outer_color = .*|    outer_color = rgba($ACCENT_RGBA) rgba($ACCENT_RGBA) 45deg|" "$HYPRLOCK_CONF"
-sed -i "/^input-field {/,/^}/ s|^\s*check_color = .*|    check_color = rgba($ACCENT_RGBA) rgba($ACCENT_RGBA) 120deg|" "$HYPRLOCK_CONF"
-sed -i "/^input-field {/,/^}/ s|^\s*fail_color = .*|    fail_color = rgba($FAIL_RGBA) rgba($FAIL_RGBA) 40deg|" "$HYPRLOCK_CONF"
+FG_RGBA=$(hex_to_rgba "$FG" 1.0)       # for font_color
+ACCENT_RGBA=$(hex_to_rgba "$SUCCESS" 1.0) # for outer_color & check_color
+FAIL_RGBA=$(hex_to_rgba "$ERROR" 1.0)   # for fail_color
+sed -i "/^input-field {/,/^}/ s|^\s*font_color = .*|    font_color = $FG_RGBA|" "$HYPRLOCK_CONF"
+sed -i "/^input-field {/,/^}/ s|^\s*outer_color = .*|    outer_color = $ACCENT_RGBA $ACCENT_RGBA 45deg|" "$HYPRLOCK_CONF"
+sed -i "/^input-field {/,/^}/ s|^\s*check_color = .*|    check_color = $ACCENT_RGBA $ACCENT_RGBA 120deg|" "$HYPRLOCK_CONF"
+sed -i "/^input-field {/,/^}/ s|^\s*fail_color = .*|    fail_color = $FAIL_RGBA $FAIL_RGBA 40deg|" "$HYPRLOCK_CONF"
+
+# Update Zen Browser colors (Symlink pywal colors for Firefox/Zen)
+PROFILE_DIR=$(find ~/.zen -maxdepth 1 -type d -name "*.Default (release)*" 2>/dev/null | head -n 1)
+echo "$PROFILE_DIR"
+if [ -n "$PROFILE_DIR" ]; then
+    mkdir -p "$PROFILE_DIR/chrome"
+    ln -sf "$HOME/.cache/wal/colors.css" "$PROFILE_DIR/chrome/colors.css"
+fi
 
 # Set wallpaper
 swww img "$IMAGE" --transition-type="grow" --transition-duration="1" --transition-fps="60"
