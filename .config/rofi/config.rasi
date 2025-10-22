@@ -26,8 +26,8 @@ configuration {
 
 /* Make the window wide enough for two columns */
 window {
-    width: 40%;
-    height: 50%;
+    width: 46.7%;
+    height: 46.7%;
     location: center;
     transparency: "real";
     children: [mainbox];
@@ -47,7 +47,7 @@ imagebox {
     /*background-size: cover;*/
     background-position: center;
     expand: false;
-    width: calc((40% - 12px) / 2); /* Because total box is 40% and we remove 10px left padding, 10px right padding, 12px margin for gap between the two boxes */
+    width: calc((46.7% - 12px) / 2); /* Because total box is 46.7% and we remove 4px left padding, 4px right padding, 4px margin for gap between the two boxes */
     border-radius: 10px 0px 0px 10px;
     margin: 0px 4px 0px 0px;
     background-color: @bg-alt;  /* fallback color */
@@ -57,7 +57,7 @@ imagebox {
 contentbox {
     background-color: @bg;
     expand: true;
-    width: calc((40% - 32px) / 2); /* Because total box is 40% and we remove 10px left padding, 10px right padding, 12px margin for gap between the two boxes */
+    width: calc((46.7% - 12px) / 2); /* Because total box is 46.7% and we remove 4px left padding, 4px right padding, 4px margin for gap between the two boxes */
     children: [inputbar, listview];
     border-radius: 0 10px 10px 0;
 }
