@@ -29,6 +29,15 @@ if [ "$#" -ne 1 ]; then
 fi
 
 IMAGE="$1"
+# Detect if the file is a GIF and extract a still frame for processing
+if file --mime-type "$IMAGE" | grep -q "image/gif"; then
+    echo "Detected GIF wallpaper, extracting first frame..."
+    STATIC_IMAGE="/tmp/static_wallpaper.png"
+    magick "$IMAGE"[0] "$STATIC_IMAGE"
+    IMAGE_STATIC="$STATIC_IMAGE"
+else
+    IMAGE_STATIC="$IMAGE"
+fi
 
 # Send notification to the user
 notify-send "Changing Theme" "Applying new wallpaper and updating colors, please wait until confirmation..."
@@ -49,7 +58,7 @@ notify-send "Changing Theme" "Applying new wallpaper and updating colors, please
     IMAGEBOX_HEIGHT=$ROFI_HEIGHT
     # Crop left portion of wallpaper to match imagebox size (ImageMagick)
     # Preserves aspect ratio by resizing first to match height, then crop width
-    magick "$IMAGE" -resize x$IMAGEBOX_HEIGHT -gravity west -crop ${IMAGEBOX_WIDTH}x${IMAGEBOX_HEIGHT}+0+0 +repage "$OUTPUT"
+    magick "$IMAGE_STATIC" -resize x$IMAGEBOX_HEIGHT -gravity west -crop ${IMAGEBOX_WIDTH}x${IMAGEBOX_HEIGHT}+0+0 +repage "$OUTPUT"
 ) &
 
 
@@ -100,9 +109,11 @@ cat > "$SWAYNC_COLORS" <<EOF
 EOF
 
 # Refresh waybar
-pkill -SIGUSR2 waybar
-#pkill waybar
-#waybar > /dev/null 2>&1 &
+# option 1
+#pkill -SIGUSR2 waybar # -> Doesn't refresh gtk themes!!!
+# option 2
+pkill waybar
+waybar > /dev/null 2>&1 &
 
 # Refresh swaync
 swaync-client --reload-config --reload-css
