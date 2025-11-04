@@ -32,11 +32,12 @@ IMAGE="$1"
 # Detect if the file is a GIF and extract a still frame for processing
 if file --mime-type "$IMAGE" | grep -q "image/gif"; then
     echo "Detected GIF wallpaper, extracting first frame..."
-    STATIC_IMAGE="/tmp/static_wallpaper.png"
+    STATIC_IMAGE="$HOME/.cache/static_wallpaper.png"
     magick "$IMAGE"[0] "$STATIC_IMAGE"
     IMAGE_STATIC="$STATIC_IMAGE"
 else
-    IMAGE_STATIC="$IMAGE"
+    # Ensure full absolute path for normal images
+    IMAGE_STATIC="$(realpath "$IMAGE")"
 fi
 
 # Send notification to the user
@@ -121,11 +122,12 @@ swaync-client --reload-config --reload-css
 #swaync > /dev/null 2>&1 &
 
 # Save wallpaper path so swww can find it on boot
-echo "$HOME/.config/wallpapers/$IMAGE" > "$LAST_WALLPAPER_FILE"
+#echo "$HOME/.config/wallpapers/$IMAGE" > "$LAST_WALLPAPER_FILE"
+echo "$(realpath "$IMAGE")" > "$LAST_WALLPAPER_FILE"
 
 # Update hyprlock.conf to use this wallpaper as lock screen image
 HYPRLOCK_CONF="$HOME/.config/hypr/hyprlock.conf"
-sed -i "/^background {/,/^}/ s|^\s*path = .*|    path = $(<"$LAST_WALLPAPER_FILE")|" "$HYPRLOCK_CONF"
+sed -i "/^background {/,/^}/ s|^\s*path = .*|    path = $IMAGE_STATIC|" "$HYPRLOCK_CONF"
 
 # Update hyprlock input colors
 FG_RGBA=$(hex_to_rgba "$FG" 1.0)       # for font_color
