@@ -44,6 +44,7 @@ no installation scripts sorry i'm sure you will need to change the hyprland conf
 
 some fonts required, including but not limited to:
   - otf-font-awesome (from pacman)
+installing ttf-jetbrains-mono-nerd broke some waybar icons, uninstalling them fixed it
 
 work in progress
 
