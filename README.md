@@ -42,6 +42,9 @@ main shortcuts are:
 
 no installation scripts sorry i'm sure you will need to change the hyprland config too since it's set for my monitors
 
+some fonts required, including but not limited to:
+  - otf-font-awesome (from pacman)
+
 work in progress
 
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/e29f1fe9-0a81-42e1-ba27-22eba8cc7fd7" />
