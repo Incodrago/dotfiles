@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export PATH=$PATH:/home/Thibaud/.local/bin
+
 # Pokefetch - Random Pokémon System Info
 # Customized by incodrago
 # Based on original by discomanfulanito

@@ -1,0 +1,70 @@
+@import "~/.cache/wal/colors-rofi-dark.rasi"
+
+configuration {
+    show-icons: true;
+    font: "JetBrainsMono Nerd Font 9";
+    icon-theme: "";
+}
+
+* {
+    bg:       @background;
+    bg-alt:   @active-background;
+    fg:       @foreground;
+    fg-alt:   @active-foreground;
+
+    border-radius: 12px;
+}
+
+/* Window */
+window {
+    location: center;
+    width: 70%;
+    height: 70%;
+    transparency: "real";
+    background-color: @bg;
+    padding: 12px;
+}
+
+/* Main container */
+mainbox {
+    children: [ listview ];
+}
+
+/* Grid layout */
+listview {
+    columns: 4;        /* <-- THIS is the magic */
+    lines: 3;
+    spacing: 14px;
+    fixed-height: false;
+    background-color: transparent;
+}
+
+/* Wallpaper tile */
+element {
+    orientation: vertical;
+    background-color: @bg-alt;
+    padding: 10px;
+    border-radius: 14px;
+}
+
+/* Selected wallpaper */
+element selected {
+    background-color: @bg;
+    border: 2px;
+    border-color: @fg-alt;
+}
+
+/* Image thumbnail */
+element-icon {
+    size: 220px;       /* BIG thumbnails */
+    border-radius: 10px;
+}
+
+/* Filename text */
+element-text {
+    text-color: @fg;
+    horizontal-align: 0.5;
+    vertical-align: 0.5;
+    margin: 6px 0 0 0;
+    font: "JetBrainsMono Nerd Font 8";
+}

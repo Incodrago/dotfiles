@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export PATH=$PATH:/home/Thibaud/.local/bin
+
 # Helper function
 hex_to_rgba() {
     local hex=$1
