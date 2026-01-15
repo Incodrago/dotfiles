@@ -1,4 +1,4 @@
-@import "/home/Thibaud/.config/rofi/config.rasi"
+@import "/home/thibaud/.config/rofi/config.rasi"
 
 configuration {
     show-icons: true;

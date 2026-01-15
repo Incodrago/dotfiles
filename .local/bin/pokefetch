@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export PATH=$PATH:/home/Thibaud/.local/bin
+export PATH=$PATH:/home/thibaud/.local/bin
 
 # Pokefetch - Random Pokémon System Info
 # Customized by incodrago

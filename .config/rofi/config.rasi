@@ -10,7 +10,7 @@ configuration {
     icon-theme: "Papirus";
 }
 
-@import "/home/Thibaud/.cache/wal/colors-rofi-dark.rasi"
+@import "/home/thibaud/.cache/wal/colors-rofi-dark.rasi"
 
 * {
     bg: @background;
