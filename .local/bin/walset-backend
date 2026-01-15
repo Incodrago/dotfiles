@@ -140,8 +140,6 @@ EOF
 # Rofi background - THIS IS MADE FOR TWO 1920x1080 SCREENS
 (
     OUTPUT="$HOME/.config/rofi/background.png"
-    SCREEN_WIDTH=$(xdpyinfo | awk '/dimensions:/ {print $2}' | cut -d'x' -f1)
-    SCREEN_HEIGHT=$(xdpyinfo | awk '/dimensions:/ {print $2}' | cut -d'x' -f2)
     # Rofi window size (same as the CSS)
     ROFI_WIDTH=$(( SCREEN_WIDTH * 40 / 100 ))
     ROFI_HEIGHT=$(( SCREEN_HEIGHT * 50 / 100 ))

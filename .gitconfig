@@ -2,3 +2,6 @@
 	defaultBranch = main
 [fetch]
 	prune = true
+[user]
+	email = demarsthibaud@gmail.com
+	name = Thibaud Demars
