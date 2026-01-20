@@ -2,22 +2,20 @@
 {
     "layer": "top",
     "position": "top",
-    "height": "30px",
-    "spacing": "4px",
+    "height": "34px",
+    "spacing": "6px",
 
-    "modules-left": [
-        "custom/notification",
-        "clock",
-        "tray",
-        "group/expand"
-    ],
-    "modules-center": [
-        "hyprland/workspaces"
-    ],
+    "modules-left": ["custom/notification", "clock", "hyprland/workspaces"],
+    "modules-center": ["custom/media"],
     "modules-right": [
-        "custom/media",
+        "network",
+        "bluetooth",
+        "custom/airplane",
+        "backlight",
         "pulseaudio",
-        "custom/mixer",
+        "battery",
+        "power-profiles-daemon",
+        "tray",
         "custom/power"
     ],
 
@@ -31,6 +29,41 @@
             "empty": ""
         },
         "tooltip-format": "{window_titles}"
+    },
+
+    "battery": {
+        "states": { "warning": 30, "critical": 15 },
+        "format": "{capacity}% {icon}",
+        "format-charging": "{capacity}% 󱐋",
+        "format-plugged": "{capacity}% ",
+        "format-icons": ["", "", "", "", ""],
+        "tooltip-format": "{timeTo}"
+    },
+
+    "network": {
+        "format-wifi": "  {essid}",
+        "format-ethernet": "󰈀",
+        "format-disconnected": "󰖪",
+        "tooltip-format": "Signal: {signaldBm}dBm\nIP: {ipaddr}",
+        "on-click": "nm-connection-editor"
+    },
+
+    "backlight": {
+        "format": "{percent}% {icon}",
+        "format-icons": ["", "", "", "", "", "", "", "", ""],
+        "on-scroll-up": "brightnessctl set 5%+",
+        "on-scroll-down": "brightnessctl set 5%-"
+    },
+
+    "power-profiles-daemon": {
+        "format": "{icon}",
+        "tooltip-format": "Profile: {profile}",
+        "format-icons": {
+            "default": "",
+            "performance": "",
+            "balanced": "",
+            "power-saver": ""
+        }
     },
 
     "custom/notification": {
@@ -59,44 +92,6 @@
     "tray": {
         "icon-size": 18,
         "spacing": 10
-    },
-
-    "group/expand": {
-        "orientation": "horizontal",
-        "drawer": {
-            "transition-duration": 600,
-            "transition-to-left": true,
-            "click-to-reveal": true
-        },
-        "modules": [
-            "custom/expand",
-            "cpu",
-            "memory",
-            "temperature"
-        ]
-    },
-
-    "custom/expand": {
-        "format": "",
-        "tooltip": false
-    },
-
-    "cpu": {
-        "format": "{usage}% ",
-        "tooltip": false
-    },
-
-    "memory": {
-        "format": "{}% "
-    },
-
-    "temperature": {
-        // "thermal-zone": 2,
-        // "format-critical": "{temperatureC}°C {icon}",
-        // "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
-        "critical-threshold": 80,
-        "format": "{temperatureC}°C {icon}",
-        "format-icons": ["", "", ""]
     },
 
     "pulseaudio": {
@@ -131,6 +126,24 @@
         "escape": true,
         "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null",
         "on-click": "playerctl play-pause"
+    },
+
+    "bluetooth": {
+        "format": " {status}",
+        "format-connected": "󰂱 {device_alias}",
+        "format-connected-battery": "󰂱 {device_alias} {device_battery_percentage}%",
+        "tooltip-format": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
+        "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
+        "on-click": "blueman-manager",
+        "on-click-right": "rfkill toggle bluetooth"
+    },
+
+    "custom/airplane": {
+        "format": "✈️",
+        "exec": "rfkill list all | grep -q 'Soft blocked: yes' && echo '✈️' || echo '󰀝'",
+        "interval": 2,
+        "on-click": "rfkill toggle all",
+        "tooltip": false
     },
 
     "custom/power": {
