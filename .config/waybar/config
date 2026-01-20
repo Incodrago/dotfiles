@@ -196,8 +196,12 @@
             "default": "🎜"
         },
         "escape": true,
-        "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null" // Script in resources folder
-        // "exec": "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" // Filter player based on name
+        "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null",
+        "on-click": "playerctl play-pause",         // Left click to toggle play/pause
+        "on-click-right": "playerctl next",         // Right click to skip
+        "on-scroll-up": "playerctl volume 0.05+",   // Scroll up to increase media volume
+        "on-scroll-down": "playerctl volume 0.05-", // Scroll down to decrease
+        "smooth-scrolling-threshold": 1
     },
     "custom/power": {
         "format" : "",
