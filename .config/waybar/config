@@ -8,6 +8,7 @@
     "modules-left": [
         "custom/notification",
         "clock",
+	"hyprland/language",
         "tray",
         "group/expand"
     ],
@@ -54,6 +55,12 @@
             "on-click-right": "shift_up",
             "on-click-middle": "shift_down"
         }
+    },
+
+    "hyprland/language": {
+    	"format": "{}",
+    	"format-en": "US",
+    	"format-fr": "FR"
     },
 
     "tray": {
@@ -139,7 +146,7 @@
         "menu": "on-click",
         "menu-file": "$HOME/.config/waybar/power_menu.xml", // Menu file in resources folder
         "menu-actions": {
-            "shutdown": "shutdown",
+            "shutdown": "shutdown 0",
             "reboot": "reboot",
             "suspend": "systemctl suspend",
             "hibernate": "systemctl hibernate"
